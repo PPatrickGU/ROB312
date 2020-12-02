@@ -6,7 +6,6 @@
 import numpy as np
 from scipy.spatial import KDTree
 import math
-import heapq
 
 
 # A few helper function
@@ -85,22 +84,22 @@ def icp(model, data, maxIter, thres):
         tree = KDTree(ref.T)
         distance, index = tree.query(dat_filt.T)
         meandist = np.mean(distance)
+        # #
+        # # # ----------------------- TODO ------------------------
+        # # # filter points matchings, keeping only the closest ones
+        # # # you have to modify :
+        # # # - 'dat_matched' with the points
+        # # # - 'index' with the corresponding point index in ref
         #
-        # # ----------------------- TODO ------------------------
-        # # filter points matchings, keeping only the closest ones
-        # # you have to modify :
-        # # - 'dat_matched' with the points
-        # # - 'index' with the corresponding point index in ref
-
-        dat_matched = dat_filt.copy()
-
+        # # dat_matched = dat_filt.copy()
+        #
         XX = 0.7
-        # #ata_index = np.sort(np.argsort(distance)[:int(len(distance) * XX)])
         data_index = np.argsort(distance)[:int(len(distance) * XX)]
         index = index[data_index]
         dat_matched = dat_filt.copy()[:, data_index]
 
-        # # normal shooting matchings, keeping only the best ones
+        ## normal-shooting matching, don't stop until find the best normal vector
+        ## find the best nomal-shooting match, but cost too much time when there are too many points
         # index = np.zeros(dat_filt.shape[1], dtype = int)
         # cos = np.zeros(dat_filt.shape[1])
         # for i in range(dat_filt.shape[1] - 1):
@@ -112,12 +111,26 @@ def icp(model, data, maxIter, thres):
         #                 np.linalg.norm(vector_tan) * np.linalg.norm(vector_nor)))
         #         if cos_tmp < min:
         #             index[i] = j
-        #             cos [i] = cos_tmp
+        #             cos[i] = cos_tmp
+        #
         # XX = 0.6
         # data_index = np.sort(np.argsort(cos)[:int(len(cos) * XX)])
         # index = index[data_index]
         # dat_matched = dat_filt.copy()[:, data_index]
 
+        ### normal-shooting matching, find a normal vector and break out the cycle
+        # data_index = []
+        # index = []
+        # for i in range(dat_filt.shape[1] - 1):
+        #     vector_tan = dat_filt.T[i + 1] - dat_filt.T[i]
+        #     for j in range(ref.shape[1]):
+        #         vector_nor = dat_filt.T[i] - ref.T[j]
+        #         if (abs(np.dot(vector_tan, vector_nor.T) / (
+        #                 np.linalg.norm(vector_tan) * np.linalg.norm(vector_nor))) < 0.1):
+        #             data_index.append(i)
+        #             index.append(j)
+        #             break
+        # dat_matched = dat_filt.copy()[:, data_index]
 
 
         # ----- Compute transform

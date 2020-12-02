@@ -14,7 +14,8 @@ import icp
 
 
 # Reading some data
-scanList = datasets.read_u2is(56)
+# scanList = datasets.read_u2is(56)
+scanList = datasets.read_fr079(56)
 scanOriginal = scanList[55]
 scanTruePose = np.array([0.3620, 0.0143, 0.0483])  # Manual estimation for scan 55 of u2is dataset
 
