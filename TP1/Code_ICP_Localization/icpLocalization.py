@@ -20,7 +20,7 @@ odomScanList = copy.deepcopy(scanList)
 
 # Parameters for scan processing
 minScan = 1
-step = 5
+step = 7
 maxScan = len(scanList)-step
 
 # Init displays

@@ -72,7 +72,7 @@ def icp(model, data, maxIter, thres):
         if np.linalg.norm((dat.T)[i+1] - (dat.T)[i]) < 0.02:
             delete_list.append(i)
     dat_filt = np.delete(dat, delete_list, 1)
-    print(dat_filt.shape)
+    # print(dat_filt.shape)
 
     # Initialize transformation to identity
     R = np.eye(2)
@@ -94,7 +94,7 @@ def icp(model, data, maxIter, thres):
 
         dat_matched = dat_filt.copy()
 
-        XX = 0.9
+        XX = 0.7
         # #ata_index = np.sort(np.argsort(distance)[:int(len(distance) * XX)])
         data_index = np.argsort(distance)[:int(len(distance) * XX)]
         index = index[data_index]
