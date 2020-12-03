@@ -93,10 +93,10 @@ def icp(model, data, maxIter, thres):
         #
         # # dat_matched = dat_filt.copy()
         #
-        XX = 0.7
-        data_index = np.argsort(distance)[:int(len(distance) * XX)]
-        index = index[data_index]
-        dat_matched = dat_filt.copy()[:, data_index]
+        # XX = 0.7
+        # data_index = np.argsort(distance)[:int(len(distance) * XX)]
+        # index = index[data_index]
+        # dat_matched = dat_filt.copy()[:, data_index]
 
         ## normal-shooting matching, don't stop until find the best normal vector
         ## find the best nomal-shooting match, but cost too much time when there are too many points
@@ -117,6 +117,25 @@ def icp(model, data, maxIter, thres):
         # data_index = np.sort(np.argsort(cos)[:int(len(cos) * XX)])
         # index = index[data_index]
         # dat_matched = dat_filt.copy()[:, data_index]
+
+        ### normal-shooting matching method 2
+        norm_idx = np.zeros(dat_filt.shape[1], dtype=int)
+        cos_ = []
+        for i in range(dat_filt.shape[1] - 1):
+            vect_tan = dat_filt[:, i + 1] - dat_filt[:, i]
+            cos = np.ones(ref.shape[1])
+            for j in  range(max(0,index[i]-10), min(index[i]+10, ref.shape[1])):
+                vect_norm = dat_filt[:, i] - ref[:, j]
+                cos[j] = abs(np.dot(vect_tan, vect_norm) / (np.linalg.norm(vect_tan) * np.linalg.norm(vect_norm)))
+            norm_idx[i] = np.argmin(cos)
+            cos_.append(cos.min())
+        dat_matched = dat_filt
+        index = norm_idx
+
+        XX = 0.5
+        data_index = np.sort(np.argsort(cos_)[:int(len(cos_) * XX)])
+        index = index[data_index]
+        dat_matched = dat_filt.copy()[:, data_index]
 
         ### normal-shooting matching, find a normal vector and break out the cycle
         # data_index = []
