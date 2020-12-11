@@ -100,56 +100,44 @@ def icp(model, data, maxIter, thres):
 
         ## normal-shooting matching, don't stop until find the best normal vector
         ## find the best nomal-shooting match, but cost too much time when there are too many points
-        # index = np.zeros(dat_filt.shape[1], dtype = int)
+        ## closest-normal-shooting matching
+        # index = np.zeros(dat_filt.shape[1], dtype=int)
         # cos = np.zeros(dat_filt.shape[1])
         # for i in range(dat_filt.shape[1] - 1):
         #     vector_tan = dat_filt.T[i + 1] - dat_filt.T[i]
+        #     min = np.inf
         #     for j in range(ref.shape[1]):
         #         vector_nor = dat_filt.T[i] - ref.T[j]
-        #         min = np.inf
-        #         cos_tmp = abs(np.dot(vector_tan, vector_nor.T) / (
-        #                 np.linalg.norm(vector_tan) * np.linalg.norm(vector_nor)))
+        #         a = abs(np.dot(vector_tan, vector_nor.T))
+        #         s = np.linalg.norm(vector_tan, axis=0) * np.linalg.norm(vector_nor, axis=0)
+        #         if s == 0:
+        #             s = 1
+        #         cos_tmp = a / s
+        #
         #         if cos_tmp < min:
         #             index[i] = j
         #             cos[i] = cos_tmp
-        #
-        # XX = 0.6
-        # data_index = np.sort(np.argsort(cos)[:int(len(cos) * XX)])
-        # index = index[data_index]
-        # dat_matched = dat_filt.copy()[:, data_index]
+        #             min = cos_tmp
 
-        ### normal-shooting matching method 2
+
+        ## closest-normal-shooting matching
         norm_idx = np.zeros(dat_filt.shape[1], dtype=int)
-        cos_ = []
+        cos_list = []
         for i in range(dat_filt.shape[1] - 1):
             vect_tan = dat_filt[:, i + 1] - dat_filt[:, i]
             cos = np.ones(ref.shape[1])
-            for j in  range(max(0,index[i]-10), min(index[i]+10, ref.shape[1])):
+            for j in range(max(0, index[i] - 10), min(index[i] + 10, ref.shape[1])):
                 vect_norm = dat_filt[:, i] - ref[:, j]
                 cos[j] = abs(np.dot(vect_tan, vect_norm) / (np.linalg.norm(vect_tan) * np.linalg.norm(vect_norm)))
-            norm_idx[i] = np.argmin(cos)
-            cos_.append(cos.min())
+        norm_idx[i] = np.argmin(cos)
+        cos_list.append(cos.min())
         dat_matched = dat_filt
-        index = norm_idx
+        datat_index = norm_idx
 
         XX = 0.5
-        data_index = np.sort(np.argsort(cos_)[:int(len(cos_) * XX)])
+        data_index = np.sort(np.argsort(cos_list)[:int(len(cos_list) * XX)])
         index = index[data_index]
         dat_matched = dat_filt.copy()[:, data_index]
-
-        ### normal-shooting matching, find a normal vector and break out the cycle
-        # data_index = []
-        # index = []
-        # for i in range(dat_filt.shape[1] - 1):
-        #     vector_tan = dat_filt.T[i + 1] - dat_filt.T[i]
-        #     for j in range(ref.shape[1]):
-        #         vector_nor = dat_filt.T[i] - ref.T[j]
-        #         if (abs(np.dot(vector_tan, vector_nor.T) / (
-        #                 np.linalg.norm(vector_tan) * np.linalg.norm(vector_nor))) < 0.1):
-        #             data_index.append(i)
-        #             index.append(j)
-        #             break
-        # dat_matched = dat_filt.copy()[:, data_index]
 
 
         # ----- Compute transform
