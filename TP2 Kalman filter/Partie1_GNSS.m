@@ -49,8 +49,8 @@ F(3,6) =dt ;
 Qf = diag([0.2,0.2,0.2,0.01,0.01,0.001]); % matrice de covariance de bruit de dynamique
 % Qf = 100*diag([0.2,0.2,0.2,0.01,0.01,0.001]) + 100*diag([0.2,0.2,0.2,0,0,0]); % matrice de covariance de bruit de dynamique
 H = eye(3,6);  % matrice d'observation (a completer) 
-R = 0.1*diag([0.3,0.3,0.3]).^2; % matrice de covariance du bruit de mesure
-
+R = diag([3,3,3]).^2; % matrice de covariance du bruit de mesure
+% R = diag([0.3,0.3,0.3]).^2;
 
 % Initialisation des variables de stockage des donnees
 K_sim(:,:,tk) = zeros(d,dm);
@@ -76,11 +76,11 @@ for tk = 2:Nk
     P_hat = F*P_hat*F.' + Qf;
 
     % validit?de la mesure reelle (?completer pour la question du trou de mesures)
-    if tk*dt > 3 && tk*dt < 7
-        is_measurementValid = false;
-    else
+%     if tk*dt > 3 && tk*dt < 7
+%         is_measurementValid = false;
+%     else
         is_measurementValid = true;
-    end
+%     end
     
     % correction (?completer: variables K, P_hat, inno, X_hat)
     if is_measurementValid

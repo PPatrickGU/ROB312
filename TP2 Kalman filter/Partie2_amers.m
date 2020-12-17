@@ -16,7 +16,7 @@ dt = 0.1; % pas de temps
 Ri = diag([10,1*pi/180].^2); % matrice de covariance du bruit de mesure pour chaque amer
 amers(1).P = [10;00]; % position de l'amer 1 (point de repere)
 amers(2).P = [0;50]; % position de l'amer 2 (point de repere)
-amers(3).P = [10;20]; % position de l'amer 2 (point de repere)
+% amers(3).P = [10;20]; % position de l'amer 2 (point de repere)
 % amers(4).P = [10;5]; % position de l'amer 2 (point de repere)
 % amers(5).P = [0;20]; % position de l'amer 2 (point de repere)
 % amers(6).P = [0;0]; % position de l'amer 2 (point de repere)
@@ -49,10 +49,10 @@ end
 %% Boucle de simulation physique des mesures
 dt_mesure = 1;
 for tk = 2:(T/dt)
-%     if mod(tk, dt_mesure/dt) == 0 
+    if mod(tk, dt_mesure/dt) == 0 
     % Récupération de l'etat vrai
         X_reel = X_reel_sim(:,tk);
-%     end
+    end
         % generation de la mesure reelle
     Y = [];
     for i = 1:size(amers,2)
@@ -78,7 +78,7 @@ X_hat = [0, 0, 0]'; % estimation initial
 Qf = diag([0.1,0.1,0.001]); % matrice de covariance de bruit de dynamique
 % Qf = 0.1 * diag([0.1,0.1,0.001]); % matrice de covariance de bruit de dynamique
 % Rfi = diag([3,1*pi/180].^2); % matrice de covariance du bruit de mesure pour chaque amer
-Rfi = diag([10,1*pi/180].^2); % matrice de covariance du bruit de mesure pour chaque amer
+Rfi = 100*diag([10,1*pi/180].^2); % matrice de covariance du bruit de mesure pour chaque amer
 Rf = []; % matrice de covariance du bruit de mesure pour l'ensemble des amers
 for i = 1:size(amers,2)
     Rf = blkdiag(Rf,Rfi);
