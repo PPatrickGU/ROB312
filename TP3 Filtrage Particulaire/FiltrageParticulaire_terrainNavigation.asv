@@ -102,7 +102,6 @@ for tk = 2:(T/dt)
     
     
     % validite de la mesure reelle (a completer pour la gestion des fréquences et des trous de mesures)
-    is_measurementValid = true;
 %    Q7
 %     is_measurementValid = true;
 %     if tk > 50/dt && tk < 75/dt
@@ -111,8 +110,8 @@ for tk = 2:(T/dt)
 
 % Q8
 %     is_measurementValid = false;
-%     if mod(tk, 10) == 0
-%         is_measurementValid = true;
+%     if tk > 50/dt && tk < 75/dt
+%         is_measurementValid = false;
 %     end
      
     % correction (a completer)
@@ -135,8 +134,7 @@ for tk = 2:(T/dt)
     % derniere question, en substitution du fichier select.p)
     criterionResampling = 1/(sum(wp.^2)); % a completer
     if criterionResampling < N*threshold_resampling
-%         Xp = Xp(:,select(wp)); % selection des nouvelles particules selon l'algorithme de reehantillonnage multinomial
-        Xp = Xp(:,stratified(wp)); % selection des nouvelles particules selon l'algorithme de reehantillonnage multinomial
+        Xp = Xp(:,select(wp)); % selection des nouvelles particules selon l'algorithme de reehantillonnage multinomial
         wp = 1/N*ones(1,N); % reinitialisation des poids (a completer)
     end
     
