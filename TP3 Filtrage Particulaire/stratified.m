@@ -5,7 +5,7 @@ function [index] = stratified(wp)
     n = 1;
     m = 1;
     while (n <= N && m <= N)
-        u0 = randn/N;
+        u0 = rand/N;
         u = u0 + n/N;
         while (Q(m) < u && m < N)
             m = m+1;
